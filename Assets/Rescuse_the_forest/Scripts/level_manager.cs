@@ -20,11 +20,21 @@ public class level_manager : MonoBehaviour
     void Start()
     {
         timeInLevel = 0;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(PauseMenu.instance.ispause)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false ;
+        }
         timeInLevel += Time.deltaTime;
     }
     public void RespawnPlayer()

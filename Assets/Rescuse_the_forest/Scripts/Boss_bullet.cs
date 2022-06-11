@@ -8,7 +8,7 @@ public class Boss_bullet : MonoBehaviour
     public float bulletSpeed = 10f;
     void Start()
     {
-        
+        Audio_manager.instance.PlaySFX(2);
     }
 
     
@@ -23,6 +23,7 @@ public class Boss_bullet : MonoBehaviour
         {
             player_health_control.instant.dealDamage();
         }
+        Audio_manager.instance.PlaySFX(1);
         Destroy(gameObject);
     }
 }

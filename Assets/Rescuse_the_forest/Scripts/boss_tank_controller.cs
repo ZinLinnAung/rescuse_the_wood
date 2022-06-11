@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class boss_tank_controller : MonoBehaviour
 {
-    public enum BossState { shooting,hurt,moving};
+    public enum BossState { shooting,hurt,moving,end};
     [Header("State")]
     public BossState CurrentState;
     public Transform theBoss;
@@ -14,6 +14,10 @@ public class boss_tank_controller : MonoBehaviour
     public Transform leftpoint, rightpoint;
     private bool movingRight;
     public SpriteRenderer SR;
+    public GameObject mine;
+    public Transform minepoint;
+    public float timebetweenmine;
+    private float minecount;
 
     [Header("Fire")]
     public Transform firepoint;
@@ -26,9 +30,19 @@ public class boss_tank_controller : MonoBehaviour
     public float hurtTime;
     private float hurtCounter;
     public GameObject hitbox;
+
+    [Header("Health")]
+    public float health = 5;
+    public GameObject explosion;
+    public bool isdefected;
+    public float speedup;
+
+    public GameObject bouncepad;
+    
     void Start()
     {
         CurrentState = BossState.shooting;
+        bouncepad.SetActive(false);
     }
 
     
@@ -55,6 +69,15 @@ public class boss_tank_controller : MonoBehaviour
                     if(hurtCounter<=0)
                     {
                         CurrentState = BossState.moving;
+                        minecount = 0;
+                        if(isdefected)
+                        {
+                            theBoss.gameObject.SetActive(false);
+                            Instantiate(explosion, transform.position, transform.rotation);
+                            CurrentState = BossState.end;
+                            Audio_manager.instance.EndBossMusic();
+                            bouncepad.SetActive(true);
+                        }
                         
 
                     }
@@ -85,6 +108,12 @@ public class boss_tank_controller : MonoBehaviour
                         theBoss.localScale = new Vector3(-1, 1, 1);
                     }
                 }
+                minecount -= Time.deltaTime;
+                if(minecount<=0)
+                {
+                    minecount = timebetweenmine;
+                    Instantiate(mine, minepoint.position, minepoint.rotation);
+                }
                 break;
         }
 #if UNITY_EDITOR
@@ -102,7 +131,25 @@ public class boss_tank_controller : MonoBehaviour
         
         hurtCounter = hurtTime;
         animator.SetTrigger("hurt");
+        Audio_manager.instance.PlaySFX(0);
 
+        Boss_tank_mine[] mines = FindObjectsOfType<Boss_tank_mine>();
+        if (mines.Length > 0|| isdefected)
+        {
+            foreach (Boss_tank_mine newmine in mines)
+            {
+                newmine.Explose();
+            }
+        }
+        health--;
+        if(health<=0)
+        {
+            isdefected = true;
+        }else
+        {
+            timeBetweenShot /= speedup;
+            timebetweenmine /= speedup;
+        }
     }
     private void EndMovement()
     {
