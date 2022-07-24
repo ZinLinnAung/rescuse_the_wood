@@ -11,6 +11,7 @@ public class MapPoint : MonoBehaviour
     public string leveltoload,leveltocheck,levelName;
     public int Gemcollected, TergetGem;
     public float BestTime, TergetTime;
+    public int currentpointnumber;
    
     void Start()
     {

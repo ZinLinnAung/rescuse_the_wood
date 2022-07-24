@@ -76,6 +76,13 @@ public class LS_UI_controller : MonoBehaviour
 
         showInfoPannel.SetActive(true);
     }
+    public void showError(MapPoint levelInfo)
+    {
+        levelName.text = "Locked";
+        
+
+        showInfoPannel.SetActive(true);
+    }
 
     public void hideInfo()
     {
