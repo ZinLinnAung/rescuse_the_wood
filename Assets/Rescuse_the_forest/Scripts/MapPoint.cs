@@ -51,6 +51,7 @@ public class MapPoint : MonoBehaviour
                 islock = false;
             }
         }
+       
     }
 
 }
